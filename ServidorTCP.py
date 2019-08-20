@@ -23,6 +23,7 @@ class ServidorTCP():
             print('Aguradando mensagem... ')
             try:
                 conexao, endereco = self.serverOject.accept()
+                self.listaConexao.append(endereco)
                 print('servidor conectado por: {}'.format(endereco))
             except:
                 print('Nao deu certo')
