@@ -27,22 +27,22 @@ class ClienteUDP():
             # Receber mensagem
             #print('Aguradando mensagem...')
             dado , enderecoDoServidor = self.socket_UDP.recvfrom(2048)
-            print(' chegando: {} do {}...'.format(dado, enderecoDoServidor))
+            print('chegando: {} do {}...'.format(dado, enderecoDoServidor))
             time.sleep(10)
             #tempo de execução de servidor
-            self.socket_UDP1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            #self.socket_UDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             print('Enviando mensagem: {} ...'.format(uptime))
-            self.socket_UDP1.sendto(uptime, enderecoDoServidor)
+            self.socket_UDP.sendto(uptime, enderecoDoServidor)
             time.sleep(10)
 
-            self.socket_UDP3 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            #self.socket_UDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             print('Enviando mensagem: {} ...'.format(reqnum))
-            self.socket_UDP3.sendto(reqnum, enderecoDoServidor)
+            self.socket_UDP.sendto(reqnum, enderecoDoServidor)
             time.sleep(10)            
             #fechar conexao
-            self.socket_UDP2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            #self.socket_UDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             print('Enviando mensagem: {} ...'.format(fechar))
-            self.socket_UDP2.sendto(fechar, enderecoDoServidor) 
+            self.socket_UDP.sendto(fechar, enderecoDoServidor) 
             time.sleep(2)               
 
             # if dado:

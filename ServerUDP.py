@@ -39,7 +39,8 @@ class ServerUDP():
             if mensagem:
                 self.socket_UDP.sendto(mensagem, enderecoDoCliente)
                 self.listaConexo.append(enderecoDoCliente[1])
-                
+                if mensagem != b'CLOSE' or mensagem != b'REQNUM' or mensagem != b'UPTIME':
+                    print('mensagem: {} vindo do cliente {}'.format(mensagem, enderecoDoCliente[1]))
                 if mensagem == b'CLOSE':
                     # enviar = self.socket_UDP.sendto(mensagem, enderecoDoCliente)
                     # print('enviado {} para cliente {}'.format(mensagem, enderecoDoCliente))  
