@@ -26,44 +26,40 @@ class ServerUDP():
         except:
             print('Impossível pegar nome da máquina e localhost')
 
-    def tempo_execucao(self):
-        tempo_fim = timeit.default_timer()
-        print('Tempo em execucao: {}'.format((tempo_fim -  self.tempo_inicio)))
-    
-    def mostrar(self):
-        for l in self.listaConexo:
-            print(l)
-        
+
     # bind socket para porta 
     def enviar_e_receber(self):
         enderecoDoServidor = (self.localhost, self.porta)
         self.socket_UDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket_UDP.bind(enderecoDoServidor)
-
+        print('Aguradando mensagem... ')
         while True:
-            print('Aguradando mensagem... ')
+            
             mensagem, enderecoDoCliente = self.socket_UDP.recvfrom(2048)
             if mensagem:
-                print('Recebido {} do cliente {}'.format(mensagem, enderecoDoCliente))
+                self.socket_UDP.sendto(mensagem, enderecoDoCliente)
                 self.listaConexo.append(enderecoDoCliente[1])
-                print('Lista de conexoes: {}'.format(self.listaConexo))
                 
-                enviar = self.socket_UDP.sendto(mensagem, enderecoDoCliente)
-                print('enviado {} para cliente {}'.format(mensagem, enderecoDoCliente))
+                if mensagem == b'CLOSE':
+                    # enviar = self.socket_UDP.sendto(mensagem, enderecoDoCliente)
+                    # print('enviado {} para cliente {}'.format(mensagem, enderecoDoCliente))  
+                    print('Fechando a comunicacao...')        
+                    time.sleep(3)          
+                    self.socket_UDP.close()
+                    break
+                if mensagem == b'UPTIME':
+                    print( 'Tempo de execucao: {}'.format(timeit.default_timer() - self.tempo_inicio))
+                if mensagem == b'REQNUM':
+                    # if self.listaConexo is None:
+                    #     print('Lista vazia')
+                    print('Lista de conexoes: {}'.format(self.listaConexo))
+                #print('Recebido {} do cliente {}'.format(mensagem, enderecoDoCliente))
                 
-                print( 'Tempo de execucao: {}'.format(timeit.default_timer() - tempo_inicio))
-        # def mostrar(self):
-        #     for l in self.listaConexo:
-        #         print(l)                
-        #         # mostrar()
-        #     #     # tempo_execucao()
-        #     # else:
-        #     #     mostrar()
-        #     #     time.sleep(3)
-        #     #     tempo_execucao()
-    
+                
 
-servidor_udp = ServerUDP('localhost', 9210)
+
+
+servidor_udp = ServerUDP('localhost', 5100)
 servidor_udp.enviar_e_receber()
 
 

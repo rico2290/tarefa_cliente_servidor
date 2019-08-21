@@ -7,27 +7,48 @@ class ClienteUDP():
     def __init__(self, localhost, porta):
         self.localhost = localhost
         self.porta = porta
-        # return super().__init__(*args, **kwargs)
+        
         
         #self.socket_UDP.settimeout(2.0)
     def enviar_e_receber(self):
+        time.sleep(3)
         enderecoDoServidor = (self.localhost, self.porta)
-        mensagem = 'oi servidor '#.encode()
-        conexao = True
+        mensagem = b'oi servidor'#.encode()
+        fechar =  b'CLOSE'
+        uptime  = b'UPTIME'  
+        reqnum = b'REQNUM'      
+        #conexao = True
         #while conexao:
         try:
             self.socket_UDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            # Enviar mensagem
+
             print('Enviando mensagem: {} ...'.format(mensagem))
             self.socket_UDP.sendto(mensagem, enderecoDoServidor)
             # Receber mensagem
-            print('Aguradando mensagem...')
+            #print('Aguradando mensagem...')
             dado , enderecoDoServidor = self.socket_UDP.recvfrom(2048)
-            #print(dado)
-            if dado:
-                print('Mensagem: {} do servidor: {}' .format(dado, enderecoDoServidor))
-            conexao = False
-            print(dado)
+            print(' chegando: {} do {}...'.format(dado, enderecoDoServidor))
+            time.sleep(10)
+            #tempo de execução de servidor
+            self.socket_UDP1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            print('Enviando mensagem: {} ...'.format(uptime))
+            self.socket_UDP1.sendto(uptime, enderecoDoServidor)
+            time.sleep(10)
+
+            self.socket_UDP3 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            print('Enviando mensagem: {} ...'.format(reqnum))
+            self.socket_UDP3.sendto(reqnum, enderecoDoServidor)
+            time.sleep(10)            
+            #fechar conexao
+            self.socket_UDP2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            print('Enviando mensagem: {} ...'.format(fechar))
+            self.socket_UDP2.sendto(fechar, enderecoDoServidor) 
+            time.sleep(2)               
+
+            # if dado:
+            #     print('Mensagem: {} do servidor: {}' .format(dado, enderecoDoServidor))
+            # #conexao = False
+            
         except:
             print( 'Nao foi possivel comunicar com o servior')
             #self.socket_UDP.accept()
@@ -35,22 +56,7 @@ class ClienteUDP():
     def fechar_conexao(self):
         os.system('cls')
         self.socket_UDP.close()        
-        # fechar = print(input('Digite o comando [close]  pra fechar: '))
-        # fechar.upper()
-        # if fechar == 'CLOSE':
-        #     os.system('cls')
-        #     self.socket_UDP.close()
-        # else:
-        #     print('ops! vc digitou o comando errado')
-#192.168.0.1
-cliente_udp1 = ClienteUDP('localhost', 6010)
-cliente_udp1.enviar_e_receber()
-time.sleep(10)
-'''
 
-time.sleep(20)
-cliente_udp2 = ClienteUDP('localhost', 8010)
-cliente_udp2.enviar_e_receber()
-time.sleep(10)
-cliente_udp2.fechar_conexao()
-'''
+cliente_udp1 = ClienteUDP('localhost', 5100)
+cliente_udp1.enviar_e_receber()
+
