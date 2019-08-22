@@ -1,5 +1,5 @@
 import socket
-import timeit
+import timeit, time
 
 class ClienteTCP():
     def __init__(self, localhost, porta):
@@ -11,14 +11,27 @@ class ClienteTCP():
         print('Tempo em execucao: {}'.format((tempo_fim -  self.tempo_inicio)))
     
     def enviar_e_receber(self):
-        self.sockCliente = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.sockCliente.connect((self.localhost, self.porta))
-        #self.sockCliente.listen(self.num_conexao)
-        msm = [b'ola servidor', b'oi mundo', b'kuma ku bu sta']
-        for m in msm:
-            dado, servidor = self.sockCliente.recv(2048)
-            print('cliente recebeu: {} do {}'.format(dado, servidor))
-        self.sockCliente.close()
+        msm = [b'ola servidor', b'oi mundo', b'UPTIME', b'REQNUM', b'CLOSE']
+        try:
+            self.sockCliente = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            self.sockCliente.connect((self.localhost, self.porta))
+            #self.sockCliente.listen(self.num_conexao)
+            for m in msm:
+                #print(m)
+                time.sleep(3)   
+                if m == b'CLOSE':
+                    self.sockCliente.send(m)
+                    print('Fechando a comunicacao do lado do cliente...')  
+                    time.sleep(3)                
+                    self.sockCliente.close()
+                    
+                else:
+                    self.sockCliente.send(m)
+                # dado, servidor = self.sockCliente.recv(2048)
+                # print('cliente recebeu: {} do {}'.format(dado, servidor))
 
-server = ClienteTCP('localhost', 40004)
+        except socket.error as s:
+            print(s)
+        
+server = ClienteTCP('localhost', 4000)
 server.enviar_e_receber()
