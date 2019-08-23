@@ -1,4 +1,4 @@
-import socket
+import socket, os, sys
 import timeit, time
 
 class ServerTCP():
@@ -18,30 +18,31 @@ class ServerTCP():
         self.serverOject.bind((self.localhost, self.porta))
         #return super().__init__(self.localhost, self.porta,self.num_conexao)
         self.serverOject.listen(self.num_conexao)
-
+        
         while True:
-            print('Aguradando mensagem em TCP... ')
+            verifica = True
             try:
+                print('Servidor TCP escutando na porta: {}'.format(self.porta))
                 conexao, endereco = self.serverOject.accept()
                 if conexao:
-                    print('servidor conectado por: {} '.format(endereco))
+                    print('servidor conectado com: {} '.format(endereco))
                     self.listaConexao.append(endereco[1])
-
-
             except:
                 print('Nenhuma conexao ativa')
-            while True:
+            while verifica:
                 dado = conexao.recv(2048)
-                if dado == b'CLOSE':
-                    #print('Fechando a comunicacao...')  
-                    time.sleep(3)  
+                if dado in [b'CLOSE', b'close']:
+                    print('Fechando a comunicacao com {}...'.format(endereco))  
+                    time.sleep(3) 
+                    verifica = False
                     conexao.close()
+                    os.system('cls') 
                     
-                if dado == b'UPTIME':
+                if dado in [b'UPTIME', b'uptime']:
                     print( 'Tempo de execucao: {}'.format(timeit.default_timer() - self.tempo_inicio))
-                if dado == b'REQNUM':
+                if dado in [b'REQNUM', b'reqnum']:
                     print('Lista de conexoes: {}'.format(self.listaConexao))
-                if dado and dado not in [b'CLOSE', b'UPTIME', b'REQNUM' b'']:
+                if dado and dado not in [b'CLOSE', b'UPTIME', b'REQNUM' b'', b'close']:
                     print('mensagem: {} do cliente {}'.format(dado, endereco[1]))
 
                 
